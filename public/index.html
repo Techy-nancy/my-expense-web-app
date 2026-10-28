@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#070b16" />
+    <title>Daybook</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%234d7dff'/><path d='M28 26h38a6 6 0 0 1 6 6v44H38a10 10 0 0 1-10-10V26z' fill='none' stroke='%23071225' stroke-width='6'/><path d='M28 66h44' stroke='%23071225' stroke-width='6'/></svg>" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css?v=look" />
+  </head>
+  <body>
+    <p id="boot" class="boot">Opening Daybook…</p>
+
+    <section id="auth-screen" class="auth-screen" hidden>
+      <div class="auth-card">
+        <p class="mark" aria-hidden="true">
+          <svg class="glyph" viewBox="0 0 24 24"><path d="M6 4h11a2 2 0 0 1 2 2v14H8a2 2 0 0 1-2-2V4z"/><path d="M6 18h13"/></svg>
+        </p>
+        <h1>Daybook</h1>
+        <p class="lede">Track what comes in, what goes out, and what is left.</p>
+
+        <div class="auth-switch" role="tablist">
+          <button type="button" id="show-login" class="active" role="tab" aria-selected="true">Sign in</button>
+          <button type="button" id="show-register" role="tab" aria-selected="false">Create account</button>
+        </div>
+
+        <form id="auth-form">
+          <div id="auth-error" class="form-errors" hidden></div>
+          <label id="name-field" hidden>
+            Name
+            <input name="name" maxlength="60" autocomplete="name" />
+          </label>
+          <label>
+            Email
+            <input name="email" type="email" required maxlength="120" autocomplete="username" />
+          </label>
+          <label>
+            Password
+            <input name="password" type="password" required minlength="8" maxlength="72" autocomplete="current-password" />
+          </label>
+          <p id="password-hint" class="hint" hidden>At least 8 characters.</p>
+          <button type="submit" class="btn primary" id="auth-submit">Sign in</button>
+        </form>
+      </div>
+    </section>
+
+    <div id="app" class="app" hidden>
+      <header class="topbar">
+        <div class="topbar-inner">
+          <button type="button" id="menu-toggle" class="menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="rail">
+            <span></span><span></span><span></span>
+          </button>
+          <div class="brand-block">
+            <p class="mark" aria-hidden="true">
+              <svg class="glyph" viewBox="0 0 24 24"><path d="M6 4h11a2 2 0 0 1 2 2v14H8a2 2 0 0 1-2-2V4z"/><path d="M6 18h13"/></svg>
+            </p>
+            <div>
+              <p class="brand">Daybook</p>
+              <p class="brand-note">Income, expenses, and what is left</p>
+            </div>
+          </div>
+          <div class="top-actions">
+            <button type="button" class="btn income" data-add="income">+ Add income</button>
+            <button type="button" class="btn expense" data-add="expense">+ Add expense</button>
+            <div class="who">
+              <span class="user-name"></span>
+              <button type="button" class="text-btn logout">Log out</button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <button type="button" id="nav-scrim" class="nav-scrim" hidden aria-label="Close menu"></button>
+      <aside class="drawer" id="rail">
+        <div class="drawer-head">
+          <p class="brand">Daybook</p>
+          <button type="button" id="menu-close" class="icon-btn" aria-label="Close menu">×</button>
+        </div>
+        <p class="user-name drawer-name"></p>
+        <p class="user-email"></p>
+        <nav class="drawer-nav">
+          <a href="#overview">Overview</a>
+          <a href="#cashflow">Cash flow</a>
+          <a href="#categories">Categories</a>
+          <a href="#transactions">Transactions</a>
+        </nav>
+        <button type="button" class="btn income" data-add="income">+ Add income</button>
+        <button type="button" class="btn expense" data-add="expense">+ Add expense</button>
+        <button type="button" class="text-btn logout drawer-logout">Log out</button>
+      </aside>
+
+      <main>
+        <p id="banner" class="banner" role="status" hidden></p>
+
+        <section id="overview">
+          <header class="section-head">
+            <div>
+              <p class="eyebrow" id="dash-month">This month</p>
+              <h1 id="hello">Overview</h1>
+            </div>
+            <label class="month-pick">
+              Month
+              <input id="report-month" type="month" />
+            </label>
+          </header>
+          <p id="report-sentence" class="summary-line"></p>
+          <div class="stats">
+            <article class="stat">
+              <span>Left this month</span>
+              <strong id="stat-balance">—</strong>
+              <p id="balance-note" class="stat-note"></p>
+            </article>
+            <article class="stat">
+              <span>Income</span>
+              <strong id="stat-income">—</strong>
+              <p id="income-note" class="stat-note"></p>
+            </article>
+            <article class="stat">
+              <span>Expenses</span>
+              <strong id="stat-expense">—</strong>
+              <p id="expense-note" class="stat-note"></p>
+            </article>
+            <article class="stat">
+              <span id="prev-label">Last month</span>
+              <strong id="stat-prev">—</strong>
+              <p class="stat-note">Left over</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="cashflow" class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>Cash flow</h2>
+              <p class="quiet">Income and expenses over six months</p>
+            </div>
+            <p class="legend"><i class="swatch income"></i> Income <i class="swatch expense"></i> Expenses</p>
+          </div>
+          <p id="chart-note" class="quiet" hidden>The chart fills in once you add entries.</p>
+          <div class="plot">
+            <div id="y-axis" class="y-axis" aria-hidden="true"></div>
+            <div id="chart" class="chart" role="img" aria-label="Income and expenses for six months"></div>
+          </div>
+        </section>
+
+        <div id="categories" class="pair">
+          <section class="panel">
+            <h2>Spending share</h2>
+            <div id="donut"></div>
+            <p id="top-category" class="quiet top-line" hidden></p>
+          </section>
+          <section class="panel">
+            <h2>Income by category</h2>
+            <div id="income-cats"></div>
+          </section>
+        </div>
+
+        <section id="transactions" class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>Transactions</h2>
+              <p class="quiet">Search, filter, and update your records.</p>
+            </div>
+          </div>
+          <div class="toolbar">
+            <label class="search">
+              <span class="visually-hidden">Search</span>
+              <input id="filter-search" type="search" placeholder="Search note or category" autocomplete="off" />
+            </label>
+            <div class="seg" id="kind-filter" role="group" aria-label="Type">
+              <button type="button" data-kind="" class="active" aria-pressed="true">All</button>
+              <button type="button" data-kind="income" aria-pressed="false">Income</button>
+              <button type="button" data-kind="expense" aria-pressed="false">Expenses</button>
+            </div>
+            <label class="filter-field">
+              <span class="visually-hidden">Category</span>
+              <select id="filter-category">
+                <option value="">All categories</option>
+              </select>
+            </label>
+            <label class="filter-field">
+              <span class="visually-hidden">Month</span>
+              <input id="filter-month" type="month" />
+            </label>
+            <button type="button" class="btn ghost" id="clear-filters">Clear</button>
+          </div>
+          <div class="sheet">
+            <table>
+              <thead>
+                <tr>
+                  <th>Transaction</th>
+                  <th>Category</th>
+                  <th>Date</th>
+                  <th class="num">Amount</th>
+                  <th class="actions-col">Action</th>
+                </tr>
+              </thead>
+              <tbody id="entries-body"></tbody>
+            </table>
+            <p id="entries-empty" class="empty" hidden></p>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div id="modal" class="modal" hidden>
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <header class="modal-head">
+          <h2 id="modal-title">Add expense</h2>
+          <button type="button" id="close-modal" class="icon-btn" aria-label="Close">×</button>
+        </header>
+        <form id="entry-form">
+          <div id="form-errors" class="form-errors" hidden></div>
+          <div class="fields">
+            <label>
+              Type
+              <select name="kind" required>
+                <option value="expense">Expense</option>
+                <option value="income">Income</option>
+              </select>
+            </label>
+            <label>
+              Amount
+              <input name="amount" inputmode="decimal" required placeholder="0.00" />
+            </label>
+            <label>
+              Category
+              <select name="category" required></select>
+            </label>
+            <label>
+              Date
+              <input name="occurredOn" type="date" required />
+            </label>
+            <label class="wide">
+              Note
+              <input name="memo" maxlength="140" placeholder="Optional" />
+            </label>
+          </div>
+          <div class="modal-actions">
+            <button type="button" id="cancel-form" class="btn ghost">Cancel</button>
+            <button type="submit" class="btn primary" id="save-btn">Save</button>
+          </div>
+        </form>
+        <section id="confirm" hidden>
+          <p id="confirm-text"></p>
+          <div class="modal-actions">
+            <button type="button" id="cancel-delete" class="btn ghost">Keep it</button>
+            <button type="button" id="confirm-delete" class="btn danger">Delete</button>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script src="app.js?v=look"></script>
+  </body>
+</html>

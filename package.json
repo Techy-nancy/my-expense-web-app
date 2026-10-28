@@ -1,0 +1,17 @@
+{
+  "name": "daybook",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Expense tracker: income, expenses, reports, and sign-in.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node --experimental-sqlite server.js",
+    "test": "node --experimental-sqlite --test test/api.test.js"
+  },
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
