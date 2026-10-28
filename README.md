@@ -2,9 +2,7 @@
 
 Daybook is my expense tracker. I can create an account, write down income and expenses, and see what is left for the month. The numbers on the page come from records I saved. There is no sample data and no made-up budget.
 
-## How I would explain it
-
-If I had to talk through the project, this is what I would say.
+## My Project walk-through
 
 I built a full-stack web app. The screen is HTML, CSS, and JavaScript in the `public` folder. The server is Node.js with Express, in `server.js`. Records are stored in SQLite, in `data/daybook.db`, which is created the first time the app runs. That file stays on my computer, so a refresh does not wipe the book.
 
